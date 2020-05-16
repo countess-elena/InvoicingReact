@@ -63,6 +63,7 @@ class Formel extends React.Component {
   } */
   
     render() {
+      var cntrs = this.state.cntr_numbers;
       return (
           <React.Fragment>
         <form onSubmit={this.handleSubmit}>
@@ -76,7 +77,7 @@ class Formel extends React.Component {
         <App name = {this.state.apiResponce} cntr_numbers={this.state.cntr_numbers} booking_no={this.state.booking_no}/>
         responce + {this.state.apiResponce}
 
-        <CheckboxCntr cntr_numbers={this.state.cntr_numbers}/>
+        <CheckboxCntr cntr_numbers={cntrs}/>
         </React.Fragment>
       );
     }
