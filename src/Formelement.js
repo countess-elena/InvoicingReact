@@ -1,8 +1,9 @@
 import React from 'react';
 import App from './App';
+import CheckboxCntr from './CheckboxCntrs';
 //import { upload } from './Bookingsearch';
 
-class Form extends React.Component {
+class Formel extends React.Component {
     
     constructor(props) {
       super(props);
@@ -74,10 +75,12 @@ class Form extends React.Component {
         </form>
         <App name = {this.state.apiResponce} cntr_numbers={this.state.cntr_numbers} booking_no={this.state.booking_no}/>
         responce + {this.state.apiResponce}
+
+        <CheckboxCntr cntr_numbers={this.state.cntr_numbers}/>
         </React.Fragment>
       );
     }
   }
 
 //export nameform; 
-export default Form;
+export default Formel;

@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Inputform from './Inputform';
 import ToggleButton from 'react-bootstrap/ToggleButton'
+import CheckboxCntr from './CheckboxCntrs';
 
 //this is testing of sidebar
 
@@ -26,16 +27,17 @@ const App = (props) =>{
 
         <div>  
         <label> booking Number: <input type='text' value = {props.booking_no}/> </label> </div>
+
+        
         
         <Form onSubmit={handleSubmit}>
           <p>       
-          
-
           { listForms.map ((form, index) => 
             <Inputform key={index}/>)
           }
           </p>
           
+         
             
         <div>
           <Button variant="primary" type="submit" > Submit </Button>
