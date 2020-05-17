@@ -9,16 +9,15 @@ import Col from 'react-bootstrap/Col'
 class CheckboxCntr extends React.Component {
     constructor (props) {
         super (props);
-        var cntrs=props.cntr_numbers;
-        //alert (cntrs)
-        var cntrs = [];
         this.state = {
             price: 0,
-            checkedSet: (this.props.cntr_numbers)
+            checkedSet: (this.props.cntr_numbers),
+            invContent: []
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 
@@ -54,14 +53,33 @@ class CheckboxCntr extends React.Component {
         this.forceUpdate()
       }
 
-//    static getDerivedStateFromProps(props, state) {
-  //      return  {checkedSet: props.cntr_numbers};     }
+      handleSubmit (event) {
+        event.preventDefault();
+        var cntrs = this.state.checkedSet.slice();
+        //alert (cntrs);
+        var oneline = {
+            cntrs: cntrs, 
+            qty: event.target[2].value,
+            curr: event.target[1].value,
+            price: this.state.price,
+            service: event.target[0].value
+        }
+        var curr = this.state.invContent.slice();
+        curr.push (oneline);
+        this.setState ({invContent: curr}); 
+        // alert(this.state.invContent[0].curr);
+
+         this.setState ({checkedSet: (this.props.cntr_numbers)});
+         this.setState({price: 0});
+
+      }
 
 render () {
     //var cntrs=this.props.cntr_numbers.toString();
     //alert ("render")
     return (
         <div>
+<Form onSubmit={this.handleSubmit} >
 <Form.Row>
 <Col>
 { this.props.cntr_numbers.map ((cntr, index) => 
@@ -110,10 +128,14 @@ render () {
               <Form.Control placeholder={this.state.price*this.state.checkedSet.length}/>
             </Col>
 </Form.Row>
+<Form.Row>
+<Button variant="primary" type="submit" >
+    Add
+  </Button>
+</Form.Row>
+</Form>
+
     </div>
-
-
-
     )}}
 
 
