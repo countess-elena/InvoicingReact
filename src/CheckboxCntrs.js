@@ -13,11 +13,11 @@ class CheckboxCntr extends React.Component {
         //alert (cntrs)
         var cntrs = [];
         this.state = {
-            //checked: {[cntr]:true},
+            price: 0,
             checkedSet: (this.props.cntr_numbers)
         };
 
-       // cntr_nos = this.props.cntr_numbers;
+        this.handleChange = this.handleChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
@@ -42,18 +42,24 @@ class CheckboxCntr extends React.Component {
         //alert (cntrs);
     } 
 
+    handleChange(event) {
+
+        this.setState({price: event.target.value});
+      }
+
     componentWillReceiveProps(nextProps) {
         // This will erase any local state updates!
         // Do not do this.
         this.setState({ checkedSet: nextProps.cntr_numbers });
+        this.forceUpdate()
       }
 
 //    static getDerivedStateFromProps(props, state) {
   //      return  {checkedSet: props.cntr_numbers};     }
 
 render () {
-    var cntrs=this.props.cntr_numbers.toString();
-    //alert (cntrs)
+    //var cntrs=this.props.cntr_numbers.toString();
+    //alert ("render")
     return (
         <div>
 <Form.Row>
@@ -63,8 +69,9 @@ render () {
       <Form.Check  
       label={cntr} 
       type='checkbox' 
-      defaultChecked
-      checked={this.state.checked} 
+      //defaultChecked={true}
+      checked = {(this.state.checkedSet.includes(cntr))? true : false}
+      //checked={this.state.checked} 
       onChange={this.handleInputChange}
       name={cntr}
       />
@@ -96,11 +103,11 @@ render () {
             </Col>
             <Col>
             <Form.Label>Price</Form.Label>
-              <Form.Control placeholder='0.00'/>
+              <Form.Control onChange={this.handleChange} placeholder='0.00'/>
             </Col>
             <Col>
             <Form.Label>Total</Form.Label>
-              <Form.Control placeholder='0.00'/>
+              <Form.Control placeholder={this.state.price*this.state.checkedSet.length}/>
             </Col>
 </Form.Row>
     </div>
