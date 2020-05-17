@@ -28,7 +28,8 @@ class Formel extends React.Component {
   
     handleSubmit(event) {
         event.preventDefault();
-      alert('A name was submitted: ' + this.state.booking_no);
+      //alert('A name was submitted: ' + this.state.booking_no);
+
       this.callAPI(); 
       
     }
@@ -37,7 +38,7 @@ class Formel extends React.Component {
 
         var url = this.state.booking_no;
         console.log(url);
-        
+        //this.setState ({cntr_numbers: []});
         //let response = await fetch("http://localhost:2000/test");
         let response = await fetch("http://localhost:2000/xlstojson?booking="+url);
         let text= await response.json();
@@ -45,43 +46,43 @@ class Formel extends React.Component {
         //text=JSON.parse (text);
         //console.log (text);
         this.setState.booking_no = url;
-
+        //this.setState.cntr_numbers=[]
+        var curr = []; 
         text.forEach ((item)=> {
             console.log (item.cntr_number);  
             //this.setState.price= 
-            var curr = this.state.cntr_numbers;        
+            //curr = this.state.cntr_numbers;        
             curr.push(item.cntr_number);
-            this.setState.cntr_numbers = curr; 
-        });
+        })
+        this.setState({cntr_numbers:curr}); 
+
         console.log(this.state.cntr_numbers);
         //this.setState({apiResponce: text});
         this.setState({apiResponce: JSON.stringify(text)});
-    }
-/*
-    componentDidMount() {
-        this.callAPI();
-  } */
+    
+  }
   
     render() {
-      var cntrs = this.state.cntr_numbers;
+      //var cntrs = ;
       return (
           <React.Fragment>
         <form onSubmit={this.handleSubmit}>
         <label>
-            Name:
+            pls enter booking number:
             <input type="text"  value={this.state.booking_no} onChange={this.handleChange} />
           </label>
 
           <input type="submit" value="Submit" />
         </form>
-        <App name = {this.state.apiResponce} cntr_numbers={this.state.cntr_numbers} booking_no={this.state.booking_no}/>
-        responce + {this.state.apiResponce}
+        
 
-        <CheckboxCntr cntr_numbers={cntrs}/>
+        <CheckboxCntr cntr_numbers={this.state.cntr_numbers}/>
+
+       <p> responce: {this.state.apiResponce}</p>
         </React.Fragment>
       );
     }
   }
-
+//<App name = {this.state.apiResponce} cntr_numbers={this.state.cntr_numbers} booking_no={this.state.booking_no}/>
 //export nameform; 
 export default Formel;
