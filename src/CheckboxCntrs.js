@@ -2,8 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Formel from './Formelement';
-import Row from 'react-bootstrap/Row'
+import Tableinv from './Tableinv'
 import Col from 'react-bootstrap/Col'
 
 class CheckboxCntr extends React.Component {
@@ -11,13 +10,19 @@ class CheckboxCntr extends React.Component {
         super (props);
         this.state = {
             price: 0,
+            service: "Freight",
+            curr: "EUR",
             checkedSet: (this.props.cntr_numbers),
+            //qty: checkedSet.length,
             invContent: []
         };
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeprice = this.handleChangeprice.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeservice = this.handleChangeservice.bind(this);
+        this.handleChangecurr = this.handleChangecurr.bind(this);
+        //this.handleChangeqty = this.handleChangeqty.bind(this);
     }
 
 
@@ -41,16 +46,25 @@ class CheckboxCntr extends React.Component {
         //alert (cntrs);
     } 
 
-    handleChange(event) {
-
+    handleChangeprice(event) {
         this.setState({price: event.target.value});
+      }
+
+      handleChangecurr(event) {
+        this.setState({curr: event.target.value});
+      }
+
+      handleChangeservice(event) {
+        this.setState({service: event.target.value});
       }
 
     componentWillReceiveProps(nextProps) {
         // This will erase any local state updates!
         // Do not do this.
         this.setState({ checkedSet: nextProps.cntr_numbers });
+        this.setState ({ invContent: []})
         this.forceUpdate()
+
       }
 
       handleSubmit (event) {
@@ -59,24 +73,22 @@ class CheckboxCntr extends React.Component {
         //alert (cntrs);
         var oneline = {
             cntrs: cntrs, 
-            qty: event.target[2].value,
-            curr: event.target[1].value,
+            qty: this.state.checkedSet.length,
+            curr: this.state.curr,
             price: this.state.price,
-            service: event.target[0].value
+            service: this.state.service
         }
         var curr = this.state.invContent.slice();
         curr.push (oneline);
         this.setState ({invContent: curr}); 
-        // alert(this.state.invContent[0].curr);
+        this.forceUpdate();
 
          this.setState ({checkedSet: (this.props.cntr_numbers)});
          this.setState({price: 0});
-
       }
 
+
 render () {
-    //var cntrs=this.props.cntr_numbers.toString();
-    //alert ("render")
     return (
         <div>
 <Form onSubmit={this.handleSubmit} >
@@ -99,7 +111,7 @@ render () {
 <Col>
 <Form.Group controlId="exampleForm.SelectCustom">
             <Form.Label>Service</Form.Label>
-              <Form.Control as="select" custom>
+              <Form.Control as="select" custom onChange={this.handleChangeservice}>
                 <option>Freight</option>
                 <option>Winter surcharge</option>
                 <option>add service</option>
@@ -110,18 +122,18 @@ render () {
 </Col>
 <Col>
 <Form.Label>Curr</Form.Label>            
-            <Form.Control as="select" custom>
+            <Form.Control as="select" custom onChange= {this.handleChangecurr}>
                 <option>EUR</option>
                 <option>USD</option>
               </Form.Control>
             </Col>
             <Col>
             <Form.Label>Qty</Form.Label>
-              <Form.Control placeholder={this.state.checkedSet.length}/>
+              <Form.Control value={this.state.checkedSet.length}/>
             </Col>
             <Col>
             <Form.Label>Price</Form.Label>
-              <Form.Control onChange={this.handleChange} placeholder='0.00'/>
+              <Form.Control value={this.state.price } onChange={this.handleChangeprice} />
             </Col>
             <Col>
             <Form.Label>Total</Form.Label>
@@ -135,7 +147,9 @@ render () {
 </Form.Row>
 </Form>
 
+<Tableinv invContent={this.state.invContent}/>
     </div>
+    
     )}}
 
 

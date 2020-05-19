@@ -1,7 +1,7 @@
 import React from 'react';
 import App from './App';
 import CheckboxCntr from './CheckboxCntrs';
-//import { upload } from './Bookingsearch';
+
 
 class Formel extends React.Component {
     
@@ -12,13 +12,12 @@ class Formel extends React.Component {
         apiResponce: [],
         cntr_numbers: [],
         booking_no: "",
-        price: ''
+        price: '',
+        invContent: [] 
     };
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
-
-    
   
     handleChange(event) {
 
@@ -31,7 +30,6 @@ class Formel extends React.Component {
       //alert('A name was submitted: ' + this.state.booking_no);
 
       this.callAPI(); 
-      
     }
 
     async callAPI() {
@@ -76,7 +74,8 @@ class Formel extends React.Component {
         </form>
         
 
-        <CheckboxCntr cntr_numbers={this.state.cntr_numbers}/>
+        <CheckboxCntr cntr_numbers={this.state.cntr_numbers} />
+
 
        <p> responce: {this.state.apiResponce}</p>
         </React.Fragment>
