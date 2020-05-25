@@ -22,7 +22,7 @@ class CheckboxCntr extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeservice = this.handleChangeservice.bind(this);
         this.handleChangecurr = this.handleChangecurr.bind(this);
-        //this.handleChangeqty = this.handleChangeqty.bind(this);
+        this.InvoiceSubmit = this.InvoiceSubmit.bind(this);
     }
 
 
@@ -87,6 +87,24 @@ class CheckboxCntr extends React.Component {
          this.setState({price: 0});
       }
 
+      async createPDF () {
+        var invContent = this.state.invContent;
+        var apiResponce=this.props.apiResponce;
+        //var cntr_numbers=JSON.stringify(this.props.cntrs_numbers)
+        var cntr_numbers = this.props.cntr_numbers; 
+        cntr_numbers={"cntrs": cntr_numbers}; 
+        cntr_numbers = JSON.stringify (cntr_numbers);
+        invContent=JSON.stringify(invContent);
+          let response = await fetch("http://localhost:2000/test?invContent="+invContent + "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
+          let text= await response.json();
+      }
+
+      InvoiceSubmit (event) {
+        //event.preventDefault();
+        this.createPDF();
+        alert ("create invoice");
+      }
+
 
 render () {
     return (
@@ -148,6 +166,8 @@ render () {
 </Form>
 
 <Tableinv invContent={this.state.invContent}/>
+
+<Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>
     </div>
     
     )}}

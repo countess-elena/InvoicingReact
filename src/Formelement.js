@@ -74,7 +74,7 @@ class Formel extends React.Component {
         </form>
         
 
-        <CheckboxCntr cntr_numbers={this.state.cntr_numbers} />
+        <CheckboxCntr cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} />
 
 
        <p> responce: {this.state.apiResponce}</p>
