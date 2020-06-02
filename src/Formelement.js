@@ -1,7 +1,11 @@
+//начальный страница сайта
 import React from 'react';
 import App from './App';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckboxCntr from './CheckboxCntrs';
-
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import NewClient from './NewClient';
 
 class Formel extends React.Component {
     
@@ -9,11 +13,13 @@ class Formel extends React.Component {
       super(props);
       this.state = {
         name: '',
-        apiResponce: [],
+        apiResponce: [{}],
         cntr_numbers: [],
         booking_no: "",
         price: '',
-        invContent: [] 
+        invContent: [],
+        key: 'home',
+        clientsList: []
     };
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,64 +30,90 @@ class Formel extends React.Component {
       this.setState({booking_no: event.target.value});
     }
     
-  
+  //вызов функции поиска инфо по букингу
     handleSubmit(event) {
+      
         event.preventDefault();
-      //alert('A name was submitted: ' + this.state.booking_no);
 
       this.callAPI(); 
+      this.getClientsList()
     }
-
+//поиск инфо по номеру букинга (с сервера: 2000 - API: Invoicing/index.js)
+//загружаем инфо из excel файла imp/exp bookings в json и затем получаеи инфо по букингу из таблицы
     async callAPI() {
-
-        var url = this.state.booking_no;
-        console.log(url);
-        //this.setState ({cntr_numbers: []});
-        //let response = await fetch("http://localhost:2000/test");
-        let response = await fetch("http://localhost:2000/xlstojson?booking="+url);
+        var booking_no = this.state.booking_no;
+        console.log(booking_no);
+        let response = await fetch("http://localhost:2000/xlstojson?booking="+booking_no);
         let text= await response.json();
         console.log (text);
-        //text=JSON.parse (text);
-        //console.log (text);
-        this.setState.booking_no = url;
-        //this.setState.cntr_numbers=[]
+        this.setState.booking_no = booking_no;
         var curr = []; 
         text.forEach ((item)=> {
             console.log (item.cntr_number);  
-            //this.setState.price= 
-            //curr = this.state.cntr_numbers;        
+                  
             curr.push(item.cntr_number);
         })
-        this.setState({cntr_numbers:curr}); 
+        this.setState({cntr_numbers: curr}); 
 
         console.log(this.state.cntr_numbers);
-        //this.setState({apiResponce: text});
-        this.setState({apiResponce: JSON.stringify(text)});
-    
+        this.setState({apiResponce: text});
   }
+
+  async getClientsList () {
+    let response = await fetch("http://localhost:2000/clientList");
+      let text= await response.json();
+      this.setState({clientsList: text})
+      console.log(text);
+  return text
+}
   
     render() {
-      //var cntrs = ;
+      let checkbox;
+      if (this.state.cntr_numbers.length>0) {
+        checkbox = <CheckboxCntr cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} clientsList={this.state.clientsList} />
+      }
+      else {checkbox=""};
+
+      const content = {
+        borderLeft: '6px solid red',
+        backgroundColor: 'lightblue',       
+        marginLeft: 250 
+    }      
       return (
-          <React.Fragment>
-        <form onSubmit={this.handleSubmit}>
+
+        <Tabs
+      id="controlled-tab-example"
+      activeKey={this.state.key}
+      onSelect={(k) => this.setState({key: k})} >
+      <Tab eventKey="Home" title="Issue Invoice">
+      <React.Fragment >
+        <form onSubmit={this.handleSubmit} style={content}>
         <label>
-            pls enter booking number:
-            <input type="text"  value={this.state.booking_no} onChange={this.handleChange} />
+            Pls enter booking number: 
+            <input type="text"  value={this.state.booking_no} onChange={this.handleChange}/>
           </label>
 
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit"/>
         </form>
-        
 
-        <CheckboxCntr cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} />
+        <div>
+        {checkbox}
+        </div>
 
-
-       <p> responce: {this.state.apiResponce}</p>
+       <p> responce: {JSON.stringify(this.state.apiResponce)}</p>
         </React.Fragment>
-      );
-    }
+      </Tab>
+      <Tab eventKey="Tab2" title="New Client">
+        <NewClient/> 
+      </Tab>
+      <Tab eventKey="Tab3" title="Invoices & Payments">
+      <p>tab 3 </p>
+      </Tab>
+    </Tabs>
+  );
+}
+         
+    
+    
   }
-//<App name = {this.state.apiResponce} cntr_numbers={this.state.cntr_numbers} booking_no={this.state.booking_no}/>
-//export nameform; 
 export default Formel;

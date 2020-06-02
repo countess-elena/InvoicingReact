@@ -1,9 +1,13 @@
+//форма вывода checkboxes + поле ввода инфо для счета и кнопка добавления строчек счета
+// + Обработка кнопки выставить счет в PDF и БД через API(invoicing/Index)
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Tableinv from './Tableinv'
 import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
 
 class CheckboxCntr extends React.Component {
     constructor (props) {
@@ -13,16 +17,23 @@ class CheckboxCntr extends React.Component {
             service: "Freight",
             curr: "EUR",
             checkedSet: (this.props.cntr_numbers),
-            //qty: checkedSet.length,
-            invContent: []
+            invContent: [],
+            OurCo: "SeaLogic OY",
+            client: "",
+            apiResponce: (this.props.apiResponce),
+            clientsList: (this.props.clientsList)
         };
+        //var apiResponce=JSON.parse(this.props.apiResponce)
 
         this.handleChangeprice = this.handleChangeprice.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeservice = this.handleChangeservice.bind(this);
         this.handleChangecurr = this.handleChangecurr.bind(this);
+        this.handleChangeClient = this.handleChangeClient.bind(this);
+        
         this.InvoiceSubmit = this.InvoiceSubmit.bind(this);
+        this.handleChangeourCo = this.handleChangeourCo.bind(this); 
     }
 
 
@@ -57,6 +68,13 @@ class CheckboxCntr extends React.Component {
       handleChangeservice(event) {
         this.setState({service: event.target.value});
       }
+      handleChangeourCo (event) {
+        this.setState({OurCo: event.target.value});
+      }
+      handleChangeClient (event) {
+        console.log (event.target.value)        
+        this.setState({client: event.target.value});
+      }
 
     componentWillReceiveProps(nextProps) {
         // This will erase any local state updates!
@@ -70,13 +88,14 @@ class CheckboxCntr extends React.Component {
       handleSubmit (event) {
         event.preventDefault();
         var cntrs = this.state.checkedSet.slice();
-        //alert (cntrs);
         var oneline = {
             cntrs: cntrs, 
             qty: this.state.checkedSet.length,
             curr: this.state.curr,
             price: this.state.price,
-            service: this.state.service
+            service: this.state.service,
+            //ourCo:this.state.OurCo,
+            //client: this.state.client
         }
         var curr = this.state.invContent.slice();
         curr.push (oneline);
@@ -89,13 +108,16 @@ class CheckboxCntr extends React.Component {
 
       async createPDF () {
         var invContent = this.state.invContent;
-        var apiResponce=this.props.apiResponce;
-        //var cntr_numbers=JSON.stringify(this.props.cntrs_numbers)
+        invContent = invContent.filter(element => element !== null);
+        //var client=JSON.stringify(this.state.client)
+        var apiResponce=JSON.stringify(this.props.apiResponce);
+        var ourCo = JSON.stringify(this.state.OurCo)
+      var cntr_numbers=JSON.stringify(this.props.cntrs_numbers)
         var cntr_numbers = this.props.cntr_numbers; 
         cntr_numbers={"cntrs": cntr_numbers}; 
         cntr_numbers = JSON.stringify (cntr_numbers);
         invContent=JSON.stringify(invContent);
-          let response = await fetch("http://localhost:2000/test?invContent="+invContent + "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
+          let response = await fetch("http://localhost:2000/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
           let text= await response.json();
       }
 
@@ -105,31 +127,81 @@ class CheckboxCntr extends React.Component {
         alert ("create invoice");
       }
 
+      callbackFunction = (id) => { 
+        var curr = this.state.invContent.slice();
+        delete (curr[id]);
+        this.setState ({invContent: curr}); 
+      }
+      /*
+
+      async getClientsList () {
+        let response = await fetch("http://localhost:2000/clientList");
+          let text= await response.json();
+          this.setState({clientsList: text})
+          //console.log(text);
+      return text
+      }
+      */
 
 render () {
+
+  let invoicebutton;
+      if (this.state.invContent.length>0) {
+        invoicebutton = <Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>
+      }
+    let apiResponce = this.props.apiResponce;
+    let firstline = "POL: " + apiResponce[0]["POL"];
+    let secondline = "POD: " + apiResponce[0]["POD"];
+
+    const leftColstyle = {
+      backgroundColor: 'lightblue', 
+      top: 0,
+      bottom: 0
+  }
+  const content = {      
+    maxWidth: '500'
+}
+
+
+
+
     return (
         <div>
-<Form onSubmit={this.handleSubmit} >
-<Form.Row>
-<Col>
-{ this.props.cntr_numbers.map ((cntr, index) => 
-    <div  key={index} className="mb-3">
-      <Form.Check  
-      label={cntr} 
-      type='checkbox' 
-      //defaultChecked={true}
-      checked = {(this.state.checkedSet.includes(cntr))? true : false}
-      //checked={this.state.checked} 
-      onChange={this.handleInputChange}
-      name={cntr}
-      />
-    </div>
-)}
+<Container> 
+
+<Row>
+
+  <Col md='2' style={leftColstyle}>
+<Form >
+<Form.Group controlId="exampleForm.SelectCustom" >
+            <Form.Label>Our Company </Form.Label>
+              <Form.Control as="select" custom onChange={this.handleChangeourCo}>
+                <option>Sealogoc OY</option>
+                <option>BP</option>
+              </Form.Control>
+            </Form.Group>
+
+<Form.Group controlId="exampleForm.SelectCustom">
+            <Form.Label>Client </Form.Label>
+              <Form.Control as="select" custom onChange={this.handleChangeClient}>
+                {this.props.clientsList.map ((client, index)=>
+                <option value = {client._id+"," +client.name +"," + client.address} key={index}> {client.name} </option>
+                ) }
+              </Form.Control>
+            </Form.Group>
+</Form>
+<Form.Control plaintext readOnly value ={firstline} />
+<Form.Control plaintext readOnly value ={secondline} />
 </Col>
-<Col>
+
+<Col md='10'>
+<Form  onSubmit={this.handleSubmit} >
+<Form.Row>
+<Col >
 <Form.Group controlId="exampleForm.SelectCustom">
             <Form.Label>Service</Form.Label>
               <Form.Control as="select" custom onChange={this.handleChangeservice}>
+
                 <option>Freight</option>
                 <option>Winter surcharge</option>
                 <option>add service</option>
@@ -165,10 +237,37 @@ render () {
 </Form.Row>
 </Form>
 
-<Tableinv invContent={this.state.invContent}/>
-
-<Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>
+</Col>
+</Row>
+<Row>
+  <Col md='2' style={leftColstyle}>
+{ this.props.cntr_numbers.map ((cntr, index) => 
+    <div  key={index} className="mb-3">
+      <Form.Check  
+      label={cntr} 
+      type='checkbox' 
+      checked = {(this.state.checkedSet.includes(cntr))? true : false}
+      onChange={this.handleInputChange}
+      name={cntr}
+      />
     </div>
+)}
+</Col>
+
+<Col md='10'>
+<div style = {content}>
+<Tableinv invContent={this.state.invContent} updateInvContent={this.callbackFunction} />
+
+</div>
+{invoicebutton}
+</Col>
+
+
+</Row>
+</Container>
+    </div>
+
+    
     
     )}}
 

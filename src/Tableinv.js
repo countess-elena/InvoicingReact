@@ -1,7 +1,10 @@
 import React from 'react';
 import App from './App';
 import CheckboxCntr from './CheckboxCntrs';
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
 
 
 class Tableinv extends React.Component {
@@ -10,7 +13,8 @@ class Tableinv extends React.Component {
         this.state = {
           invContent: (this.props.invContent)
         }
-       
+
+      this.DeleteRow = this.DeleteRow.bind(this); 
     }
 
     componentWillReceiveProps(nextProps) {
@@ -19,12 +23,22 @@ class Tableinv extends React.Component {
       this.setState({ invContent: nextProps.invContent });
       this.forceUpdate()
     }
+    DeleteRow (event) {
+      event.preventDefault();
+      var id= event.target.id;
+      this.props.updateInvContent(id);
+    }
 
 
 returntable (){
-  if (this.props.invContent.length==0) {
-    return ("nothing to return")
-  }
+  const content = {
+    //position: 'relative',          
+    //marginLeft: 220,
+    //flexWrap: 'wrap'
+    wordBreak: 'break-all',
+    width: 400
+}
+  if (this.props.invContent.length>0) {
   return (
     <div>
 <Table striped bordered hover>
@@ -43,25 +57,26 @@ returntable (){
   { this.state.invContent.map ((line, index) => 
     <tr key= {index}>
 <td>{index+1}</td>
-<td>{line["cntrs"]}</td>
+<td style={content}>{line["cntrs"]}</td>
 <td>{line["service"]}</td>
 <td>{line["curr"]}</td>
 <td>{line["qty"]}</td>
 <td>{line["price"]}</td>
   <td>{line["price"]*line["qty"]}</td>
-    </tr>
+  <td> <Button id={index} variant="outline-danger" onClick={this.DeleteRow} >X</Button> </td>
+  </tr>
   )}
   </tbody>
 </Table>
 </div>
   )
 }
+return null}
 
 render () {
 return (
 this.returntable()
 )
-
 }
 
 }
