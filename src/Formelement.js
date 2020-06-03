@@ -6,6 +6,7 @@ import CheckboxCntr from './CheckboxCntrs';
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import NewClient from './NewClient';
+import Invoices from './Invoices';
 
 class Formel extends React.Component {
     
@@ -107,7 +108,7 @@ class Formel extends React.Component {
         <NewClient/> 
       </Tab>
       <Tab eventKey="Tab3" title="Invoices & Payments">
-      <p>tab 3 </p>
+      <Invoices/>
       </Tab>
     </Tabs>
   );
