@@ -11,41 +11,48 @@ class Invoices extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
-          
+          resp: []
         }
-    }
+
+        this.Invoices(); 
+  }
+
+  async Invoices () {
+    let response = await fetch ("http://localhost:2000/getInvoices");
+    let text= await response.text();
+    text=JSON.parse (text); 
+    
+    
+    this.setState({resp: text}); 
+    console.log(this.state.resp);
+}
     render () {
+     let content = this.state.resp;
+
         return (
 <Table striped bordered hover variant="dark">
   <thead>
     <tr>
       <th>#</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Username</th>
+      <th>Invoice number</th>
+      <th>Date</th>
+      <th>Client</th>
+      <th>SUM</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
+          {content.map((invoice, index) =>
+
+    <tr key={index}>
       <td>1</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <td>{invoice.invNumber}</td>
+      <td>{invoice.date}</td>
+      <td>{invoice.client}</td>
+      <td>sum</td>
     </tr>
-    <tr>
-      <td>2</td>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td colSpan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
+          )}
   </tbody>
 </Table>
-
         )}
         }
 export default Invoices; 
