@@ -21,7 +21,8 @@ class CheckboxCntr extends React.Component {
             OurCo: "SeaLogic OY",
             client: "",
             apiResponce: (this.props.apiResponce),
-            clientsList: (this.props.clientsList)
+            clientsList: (this.props.clientsList),
+            sum: 0
         };
         //var apiResponce=JSON.parse(this.props.apiResponce)
 
@@ -101,6 +102,9 @@ class CheckboxCntr extends React.Component {
         curr.push (oneline);
         this.setState ({invContent: curr}); 
         this.forceUpdate();
+        let sum = this.state.sum;
+        this.setState ({sum: sum+this.state.price*this.state.checkedSet.length});
+        console.log (this.state.sum)
 
          this.setState ({checkedSet: (this.props.cntr_numbers)});
          this.setState({price: 0});
@@ -117,12 +121,14 @@ class CheckboxCntr extends React.Component {
         cntr_numbers={"cntrs": cntr_numbers}; 
         cntr_numbers = JSON.stringify (cntr_numbers);
         invContent=JSON.stringify(invContent);
-          let response = await fetch("http://localhost:2000/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
+        let response = await fetch("http://localhost:8000/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers+"&sum="+this.state.sum);
+        //  let response = await fetch("https://serene-beyond-29188.herokuapp.com/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
           let text= await response.json();
       }
 
       InvoiceSubmit (event) {
         //event.preventDefault();
+        this.setState({sum: 0});
         this.createPDF();
         alert ("create invoice");
       }

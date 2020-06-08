@@ -17,9 +17,10 @@ class Formel extends React.Component {
         apiResponce: [{}],
         cntr_numbers: [],
         booking_no: "",
-        price: '',
-        invContent: [],
+        //sum: 0,
         key: 'home',
+        price: 0,
+        invContent: [],
         clientsList: []
     };
       this.handleChange = this.handleChange.bind(this);
@@ -44,7 +45,9 @@ class Formel extends React.Component {
     async callAPI() {
         var booking_no = this.state.booking_no;
         console.log(booking_no);
-        let response = await fetch("http://localhost:2000/xlstojson?booking="+booking_no);
+        
+        let response = await fetch("http://localhost:8000/xlstojson?booking="+booking_no);
+        //let response = await fetch("https://serene-beyond-29188.herokuapp.com/xlstojson?booking="+booking_no);
         let text= await response.json();
         console.log (text);
         this.setState.booking_no = booking_no;
@@ -59,9 +62,10 @@ class Formel extends React.Component {
         console.log(this.state.cntr_numbers);
         this.setState({apiResponce: text});
   }
-
+  
   async getClientsList () {
-    let response = await fetch("http://localhost:2000/clientList");
+    let response = await fetch("http://localhost:8000/clientList");
+    //let response = await fetch("http://serene-beyond-29188.herokuapp.com/clientList");
       let text= await response.json();
       this.setState({clientsList: text})
       console.log(text);

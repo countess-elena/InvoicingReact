@@ -11,29 +11,43 @@ class Invoices extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
-          resp: []
+          resp: null
         }
 
         this.Invoices(); 
   }
 
   async Invoices () {
-    let response = await fetch ("http://localhost:2000/getInvoices");
-    let text= await response.text();
+    //let response = await fetch ("http://serene-beyond-29188.herokuapp.com/getInvoices");
+    let response = await fetch ("http://localhost:8000/getInvoices");
+    let text= await response.text();;
     text=JSON.parse (text); 
     
-    
+    let newtext = this.state.resp;
+    //newtext.push(text)
     this.setState({resp: text}); 
     console.log(this.state.resp);
 }
+
+
+  formatDate(date) {
+    var date = new Date (date);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return day + "." + month + "."  + year;
+    }
+
     render () {
-     let content = this.state.resp;
+    let content=[];
+    if (this.state.resp!=null) {
+      content = this.state.resp
+    }
 
         return (
 <Table striped bordered hover variant="dark">
   <thead>
     <tr>
-      <th>#</th>
       <th>Invoice number</th>
       <th>Date</th>
       <th>Client</th>
@@ -44,11 +58,10 @@ class Invoices extends React.Component {
           {content.map((invoice, index) =>
 
     <tr key={index}>
-      <td>1</td>
       <td>{invoice.invNumber}</td>
-      <td>{invoice.date}</td>
-      <td>{invoice.client}</td>
-      <td>sum</td>
+      <td>{this.formatDate(invoice.date)}</td>
+      <td>{invoice.client.name}</td>
+          <td>{invoice.sum}</td>
     </tr>
           )}
   </tbody>

@@ -2,6 +2,7 @@
   "name": "invoicingreact",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://nlforward.ru/Invoicing",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -22,14 +23,18 @@
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "serve": "^11.3.2",
     "xlsx": "^0.15.6",
     "xlsx-to-json-lc": "^0.5.0"
+    
   },
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "homepage": "http://nlforward.ru/Invoicing/index.html     "
   },
   "eslintConfig": {
     "extends": "react-app"
