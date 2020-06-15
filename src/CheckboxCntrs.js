@@ -19,7 +19,7 @@ class CheckboxCntr extends React.Component {
             checkedSet: (this.props.cntr_numbers),
             invContent: [],
             OurCo: "SeaLogic OY",
-            client: "",
+            client: (JSON.stringify(this.props.client)),
             apiResponce: (this.props.apiResponce),
             clientsList: (this.props.clientsList),
             sum: 0
@@ -82,6 +82,7 @@ class CheckboxCntr extends React.Component {
         // Do not do this.
         this.setState({ checkedSet: nextProps.cntr_numbers });
         this.setState ({ invContent: []})
+        this.setState({client: nextProps.client})
         this.forceUpdate()
 
       }
@@ -150,7 +151,8 @@ class CheckboxCntr extends React.Component {
       */
 
 render () {
-
+  //let client0=this.props.clientsList.toString();
+  //console.log("this.props.clientsList " + client0);
   let invoicebutton;
       if (this.state.invContent.length>0) {
         invoicebutton = <Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>
@@ -173,6 +175,7 @@ render () {
 
     return (
         <div>
+          
 <Container> 
 
 <Row>
@@ -225,11 +228,11 @@ render () {
             </Col>
             <Col>
             <Form.Label>Qty</Form.Label>
-              <Form.Control value={this.state.checkedSet.length}/>
+              <Form.Control defaultValue={this.state.checkedSet.length}/>
             </Col>
             <Col>
             <Form.Label>Price</Form.Label>
-              <Form.Control value={this.state.price } onChange={this.handleChangeprice} />
+              <Form.Control defaultValue={this.state.price } onChange={this.handleChangeprice} />
             </Col>
             <Col>
             <Form.Label>Total</Form.Label>

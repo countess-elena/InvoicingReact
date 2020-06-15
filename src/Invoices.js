@@ -5,6 +5,8 @@ import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
+import Papaparse from 'papaparse' 
+import download from 'downloadjs';
 
 
 class Invoices extends React.Component {
@@ -15,12 +17,15 @@ class Invoices extends React.Component {
         }
 
         this.Invoices(); 
+
+        this.download = this.download.bind(this);
+        this.handleClick = this.handleClick.bind(this);
   }
 
   async Invoices () {
     //let response = await fetch ("http://serene-beyond-29188.herokuapp.com/getInvoices");
     let response = await fetch ("http://localhost:8000/getInvoices");
-    let text= await response.text();;
+    let text= await response.text();
     text=JSON.parse (text); 
     
     let newtext = this.state.resp;
@@ -29,8 +34,26 @@ class Invoices extends React.Component {
     console.log(this.state.resp);
 }
 
+handleClick(event){
+  console.log (event.target.value);
+
+  console.log('clicked');
+}
+
+async download () {
+  const res = await fetch ("http://localhost:8000/dowloadInvoices");
+  console.log(res)
+  const blob = await res.blob();
+  download (blob, "file.csv");
+
+  //let file = await response.text();
+  console.log ('done')
+}
+
+
 
   formatDate(date) {
+    
     var date = new Date (date);
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -45,6 +68,8 @@ class Invoices extends React.Component {
     }
 
         return (
+          <div>
+          <Button onClick={this.download} variant="info">выгрузка счетов</Button>   
 <Table striped bordered hover variant="dark">
   <thead>
     <tr>
@@ -58,7 +83,7 @@ class Invoices extends React.Component {
           {content.map((invoice, index) =>
 
     <tr key={index}>
-      <td>{invoice.invNumber}</td>
+      <td><Button variant='link' value={invoice.invNumber} onClick={this.handleClick}>{invoice.invNumber}</Button></td>
       <td>{this.formatDate(invoice.date)}</td>
       <td>{invoice.client.name}</td>
           <td>{invoice.sum}</td>
@@ -66,6 +91,8 @@ class Invoices extends React.Component {
           )}
   </tbody>
 </Table>
+     </div>
+        
         )}
         }
 export default Invoices; 

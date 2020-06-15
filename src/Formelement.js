@@ -21,7 +21,7 @@ class Formel extends React.Component {
         key: 'home',
         price: 0,
         invContent: [],
-        clientsList: []
+        clientsList: [{}]
     };
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -67,15 +67,17 @@ class Formel extends React.Component {
     let response = await fetch("http://localhost:8000/clientList");
     //let response = await fetch("http://serene-beyond-29188.herokuapp.com/clientList");
       let text= await response.json();
+      //text = JSON.parse (text);
       this.setState({clientsList: text})
-      console.log(text);
+      console.log(text[0]);
   return text
 }
   
     render() {
+      let client = this.state.clientsList[0]._id + ',' + this.state.clientsList[0].address + ","+this.state.clientsList[0].name;
       let checkbox;
       if (this.state.cntr_numbers.length>0) {
-        checkbox = <CheckboxCntr cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} clientsList={this.state.clientsList} />
+        checkbox = <CheckboxCntr cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} clientsList={this.state.clientsList} client = {client}/>
       }
       else {checkbox=""};
 
@@ -84,18 +86,20 @@ class Formel extends React.Component {
         backgroundColor: 'lightblue',       
         marginLeft: 250 
     }      
+
+    //value={this.state.booking_no}
       return (
 
         <Tabs
       id="controlled-tab-example"
       activeKey={this.state.key}
       onSelect={(k) => this.setState({key: k})} >
-      <Tab eventKey="Home" title="Issue Invoice">
+      <Tab active='true' eventKey="Home" title="Issue Invoice">
       <React.Fragment >
         <form onSubmit={this.handleSubmit} style={content}>
         <label>
             Pls enter booking number: 
-            <input type="text"  value={this.state.booking_no} onChange={this.handleChange}/>
+            <input type="text"   onChange={this.handleChange}/>
           </label>
 
           <input type="submit" value="Submit"/>
