@@ -17,7 +17,7 @@ class CheckboxCntr extends React.Component {
             service: "Freight",
             curr: "EUR",
             checkedSet: (this.props.cntr_numbers),
-            invContent: [],
+            invContent: this.props.invoiceInfo[0].invContent,
             OurCo: "SeaLogic OY",
             client: (JSON.stringify(this.props.client)),
             apiResponce: (this.props.apiResponce),
@@ -81,7 +81,24 @@ class CheckboxCntr extends React.Component {
         // This will erase any local state updates!
         // Do not do this.
         this.setState({ checkedSet: nextProps.cntr_numbers });
-        this.setState ({ invContent: []})
+
+        if (nextProps.invoiceInfo[0].invContent!==undefined) {
+        let invContent = nextProps.invoiceInfo[0].invContent;
+        let Content = [];
+        invContent.forEach(element => {
+          let serv = element.service.split(';');
+          let oneline = {
+          cntrs: element.cntrs,
+          qty: element.qty,
+          curr: element.curr,
+          price: element.price,
+          service: serv[0]
+          }
+          Content.push(oneline);
+        });
+        
+        this.setState ({ invContent: Content})
+      }
         this.setState({client: nextProps.client})
         this.forceUpdate()
 
@@ -99,7 +116,11 @@ class CheckboxCntr extends React.Component {
             //ourCo:this.state.OurCo,
             //client: this.state.client
         }
-        var curr = this.state.invContent.slice();
+        if (this.state.invContent!=undefined){
+        var curr = this.state.invContent.slice();}
+        else {
+          var curr = [];
+        }
         curr.push (oneline);
         this.setState ({invContent: curr}); 
         this.forceUpdate();
@@ -154,7 +175,7 @@ render () {
   //let client0=this.props.clientsList.toString();
   //console.log("this.props.clientsList " + client0);
   let invoicebutton;
-      if (this.state.invContent.length>0) {
+      if (this.state.invContent!=undefined && this.state.invContent.length>0) {
         invoicebutton = <Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>
       }
     let apiResponce = this.props.apiResponce;
@@ -184,7 +205,7 @@ render () {
 <Form >
 <Form.Group controlId="exampleForm.SelectCustom" >
             <Form.Label>Our Company </Form.Label>
-              <Form.Control as="select" custom onChange={this.handleChangeourCo}>
+              <Form.Control select value="BP" as="select" custom onChange={this.handleChangeourCo}>
                 <option>Sealogoc OY</option>
                 <option>BP</option>
               </Form.Control>

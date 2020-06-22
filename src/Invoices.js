@@ -13,7 +13,8 @@ class Invoices extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
-          resp: null
+          resp: null,
+          invoiceInfo:""
         }
 
         this.Invoices(); 
@@ -36,8 +37,30 @@ class Invoices extends React.Component {
 
 handleClick(event){
   console.log (event.target.value);
+  let invNumber = event.target.value;
 
   console.log('clicked');
+  this.oneInvoice(invNumber);
+  //console.log (oneInv.toString());
+  //this.setState({invoiceInfo: oneInv});
+  console.log(this.state.invoiceInfo);
+  this.props.updateData(this.state.invoiceInfo)
+
+}
+
+async oneInvoice (invNumber){
+  let res = await fetch ("http://localhost:8000/oneInvoice?invNumber="+invNumber,{
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*'
+}
+  });
+  let text= await res.json();
+  //text=JSON.parse (text); 
+  console.log("text: "+text);
+  this.setState({invoiceInfo: text});
+  this.props.updateData(this.state.invoiceInfo)
+  //return text;
 }
 
 async download () {

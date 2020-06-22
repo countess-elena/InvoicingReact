@@ -38,7 +38,7 @@ returntable (){
     wordBreak: 'break-all',
     width: 400
 }
-  if (this.props.invContent.length>0) {
+  if (this.state.invContent!=undefined && this.state.invContent.length>0) {
   return (
     <div>
 <Table striped bordered hover>

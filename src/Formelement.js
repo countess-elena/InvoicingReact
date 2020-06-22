@@ -21,10 +21,12 @@ class Formel extends React.Component {
         key: 'home',
         price: 0,
         invContent: [],
-        clientsList: [{}]
+        clientsList: [{}],
+        invoiceInfo: [{}]
     };
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.updateData = this.updateData.bind(this);
     }
   
     handleChange(event) {
@@ -70,14 +72,30 @@ class Formel extends React.Component {
       //text = JSON.parse (text);
       this.setState({clientsList: text})
       console.log(text[0]);
-  return text
-}
+      return text;
+
+  }
+
+
+  updateData (value) {
+   this.setState ({ invoiceInfo: value });
+   if (value.length > 0) {
+   this.setState ({booking_no: value[0].booking_no})
+   this.callAPI(); 
+  this.getClientsList()
+  }
+   //console.log("value" + value[0].booking_no);
+   //this.setState({cntr_numbers: value.invContent.cntrs})
+  }
+
+   
+
   
     render() {
       let client = this.state.clientsList[0]._id + ',' + this.state.clientsList[0].address + ","+this.state.clientsList[0].name;
       let checkbox;
       if (this.state.cntr_numbers.length>0) {
-        checkbox = <CheckboxCntr cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} clientsList={this.state.clientsList} client = {client}/>
+        checkbox = <CheckboxCntr invoiceInfo={this.state.invoiceInfo} cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} clientsList={this.state.clientsList} client = {client}/>
       }
       else {checkbox=""};
 
@@ -116,7 +134,7 @@ class Formel extends React.Component {
         <NewClient/> 
       </Tab>
       <Tab eventKey="Tab3" title="Invoices & Payments">
-      <Invoices/>
+      <Invoices updateData={this.updateData}/>
       </Tab>
     </Tabs>
   );
