@@ -24,8 +24,8 @@ app.use ('/testAPI', (req, res)=>{
 function upload () {
     xlsxj = require ('xlsx-to-json-lc');
     xlsxj({
-      input: "uploads/excelsmall.xlsx", 
-      output: "outputsmall.json",
+      input: "uploads/excelmiddleimp.xlsx", 
+      output: "outputMiddleImp.json",
       //sheet: "EXPORT",
       lowerCaseHeaders:true //converts excel header rows into lowercase as json keys
     }, function(err, result) {
