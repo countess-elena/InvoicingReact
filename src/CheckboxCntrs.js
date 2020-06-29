@@ -22,7 +22,8 @@ class CheckboxCntr extends React.Component {
             client: (JSON.stringify(this.props.client)),
             apiResponce: (this.props.apiResponce),
             clientsList: (this.props.clientsList),
-            sum: 0
+            sum: 0,
+            invNumber: ""
         };
         //var apiResponce=JSON.parse(this.props.apiResponce)
 
@@ -92,15 +93,17 @@ class CheckboxCntr extends React.Component {
           qty: element.qty,
           curr: element.curr,
           price: element.price,
-          service: serv[0]
+          service: serv[0],
           }
           Content.push(oneline);
         });
         
         this.setState ({ invContent: Content})
+        this.setState ({invNumber: nextProps.invoiceInfo[0].invNumber})
       }
       else{
         this.setState ({ invContent: []})
+        this.setState ({invNumber: ""})
       }
         this.setState({client: nextProps.client})
         this.forceUpdate()
@@ -179,8 +182,13 @@ render () {
   //console.log("this.props.clientsList " + client0);
   let invoicebutton;
       if (this.state.invContent!=undefined && this.state.invContent.length>0) {
-        invoicebutton = <Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>
+        if (this.state.invNumber==""){
+        invoicebutton = <Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>}
+        else {
+          invoicebutton = <Button variant="warning" onClick={this.InvoiceSubmit} > Amend Invoice</Button>}
+        
       }
+
     let apiResponce = this.props.apiResponce;
     let firstline = "POL: " + apiResponce[0]["POL"];
     let secondline = "POD: " + apiResponce[0]["POD"];
