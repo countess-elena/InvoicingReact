@@ -99,6 +99,9 @@ class CheckboxCntr extends React.Component {
         
         this.setState ({ invContent: Content})
       }
+      else{
+        this.setState ({ invContent: []})
+      }
         this.setState({client: nextProps.client})
         this.forceUpdate()
 
@@ -249,11 +252,11 @@ render () {
             </Col>
             <Col>
             <Form.Label>Qty</Form.Label>
-              <Form.Control defaultValue={this.state.checkedSet.length}/>
+              <Form.Control value={this.state.checkedSet.length}/>
             </Col>
             <Col>
             <Form.Label>Price</Form.Label>
-              <Form.Control defaultValue={this.state.price } onChange={this.handleChangeprice} />
+              <Form.Control value={this.state.price } onChange={this.handleChangeprice} />
             </Col>
             <Col>
             <Form.Label>Total</Form.Label>

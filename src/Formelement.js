@@ -38,7 +38,7 @@ class Formel extends React.Component {
     handleSubmit(event) {
       
         event.preventDefault();
-
+      this.setState ({invoiceInfo:[{}]})
       this.callAPI(); 
       this.getClientsList()
     }
@@ -66,7 +66,12 @@ class Formel extends React.Component {
   }
   
   async getClientsList () {
-    let response = await fetch("http://localhost:8000/clientList");
+    let response = await fetch("http://localhost:8000/clientList", {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*'
+}
+});
     //let response = await fetch("http://serene-beyond-29188.herokuapp.com/clientList");
       let text= await response.json();
       //text = JSON.parse (text);
