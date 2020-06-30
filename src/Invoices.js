@@ -41,10 +41,7 @@ handleClick(event){
 
   console.log('clicked');
   this.oneInvoice(invNumber);
-  //console.log (oneInv.toString());
-  //this.setState({invoiceInfo: oneInv});
   console.log(this.state.invoiceInfo);
-  //this.props.updateData(this.state.invoiceInfo)
 
 }
 

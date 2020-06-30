@@ -41,6 +41,7 @@ class Formel extends React.Component {
       this.setState ({invoiceInfo:[{}]})
       this.callAPI(); 
       this.getClientsList()
+      
     }
 //поиск инфо по номеру букинга (с сервера: 2000 - API: Invoicing/index.js)
 //загружаем инфо из excel файла imp/exp bookings в json и затем получаеи инфо по букингу из таблицы
@@ -145,7 +146,5 @@ class Formel extends React.Component {
   );
 }
          
-    
-    
   }
 export default Formel;

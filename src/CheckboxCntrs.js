@@ -18,7 +18,7 @@ class CheckboxCntr extends React.Component {
             curr: "EUR",
             checkedSet: (this.props.cntr_numbers),
             invContent: this.props.invoiceInfo[0].invContent,
-            OurCo: "SeaLogic OY",
+            ourCo: "SeaLogic OY",
             client: (JSON.stringify(this.props.client)),
             apiResponce: (this.props.apiResponce),
             clientsList: (this.props.clientsList),
@@ -71,7 +71,7 @@ class CheckboxCntr extends React.Component {
         this.setState({service: event.target.value});
       }
       handleChangeourCo (event) {
-        this.setState({OurCo: event.target.value});
+        this.setState({ourCo: event.target.value});
       }
       handleChangeClient (event) {
         console.log (event.target.value)        
@@ -82,6 +82,7 @@ class CheckboxCntr extends React.Component {
         // This will erase any local state updates!
         // Do not do this.
         this.setState({ checkedSet: nextProps.cntr_numbers });
+        console.log ("checkbox state our co: " + nextProps.invoiceInfo[0].ourCompany);
 
         if (nextProps.invoiceInfo[0].invContent!==undefined) {
         let invContent = nextProps.invoiceInfo[0].invContent;
@@ -98,6 +99,7 @@ class CheckboxCntr extends React.Component {
           Content.push(oneline);
         });
         
+        this.setState ({ourCo: nextProps.invoiceInfo[0].ourCompany})
         this.setState ({ invContent: Content})
         this.setState ({invNumber: nextProps.invoiceInfo[0].invNumber})
       }
@@ -143,13 +145,13 @@ class CheckboxCntr extends React.Component {
         invContent = invContent.filter(element => element !== null);
         //var client=JSON.stringify(this.state.client)
         var apiResponce=JSON.stringify(this.props.apiResponce);
-        var ourCo = JSON.stringify(this.state.OurCo)
+        //var ourCo = JSON.stringify(this.state.OurCo)
       var cntr_numbers=JSON.stringify(this.props.cntrs_numbers)
         var cntr_numbers = this.props.cntr_numbers; 
         cntr_numbers={"cntrs": cntr_numbers}; 
         cntr_numbers = JSON.stringify (cntr_numbers);
         invContent=JSON.stringify(invContent);
-        let response = await fetch("http://localhost:8000/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers+"&sum="+this.state.sum);
+        let response = await fetch("http://localhost:8000/test?invContent="+invContent + "&ourCo="+ this.state.OurCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers+"&sum="+this.state.sum + "&invNumber="+this.state.invNumber);
         //  let response = await fetch("https://serene-beyond-29188.herokuapp.com/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
           let text= await response.json();
       }
@@ -176,6 +178,7 @@ class CheckboxCntr extends React.Component {
       return text
       }
       */
+     
 
 render () {
   //let client0=this.props.clientsList.toString();
@@ -202,8 +205,8 @@ render () {
     maxWidth: '500'
 }
 
-
-
+//select value="Sealogoc OY" as="select"
+var ourCo = this.state.ourCo;
 
     return (
         <div>
@@ -214,11 +217,12 @@ render () {
 
   <Col md='2' style={leftColstyle}>
 <Form >
-<Form.Group controlId="exampleForm.SelectCustom" >
+<Form.Group  controlId="exampleForm.SelectCustom" >
             <Form.Label>Our Company </Form.Label>
-              <Form.Control select value="BP" as="select" custom onChange={this.handleChangeourCo}>
+              <Form.Control as="select" select value ={this.state.ourCo} onChange={this.handleChangeourCo}>
                 <option>Sealogoc OY</option>
                 <option>BP</option>
+
               </Form.Control>
             </Form.Group>
 
@@ -226,7 +230,7 @@ render () {
             <Form.Label>Client </Form.Label>
               <Form.Control as="select" custom onChange={this.handleChangeClient}>
                 {this.props.clientsList.map ((client, index)=>
-                <option value = {client._id+"," +client.name +"," + client.address} key={index}> {client.name} </option>
+                <option value = {client._id+"," + client.name +"," + client.address} key={index}> {client.name} </option>
                 ) }
               </Form.Control>
             </Form.Group>
