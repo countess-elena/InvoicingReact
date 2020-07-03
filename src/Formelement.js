@@ -98,7 +98,13 @@ class Formel extends React.Component {
 
   
     render() {
-      let client = this.state.clientsList[0]._id + ',' + this.state.clientsList[0].address + ","+this.state.clientsList[0].name;
+      let client="";
+      if (this.state.invoiceInfo[0].client != undefined) {
+        client = this.state.invoiceInfo[0].client._id + ',' + "some addrr" + ","+ this.state.invoiceInfo[0].client.name;
+      }
+      else {
+      client = this.state.clientsList[0]._id + ',' + this.state.clientsList[0].address + ","+this.state.clientsList[0].name;
+      }
       let checkbox;
       if (this.state.cntr_numbers.length>0) {
         checkbox = <CheckboxCntr invoiceInfo={this.state.invoiceInfo} cntr_numbers={this.state.cntr_numbers} apiResponce={this.state.apiResponce} clientsList={this.state.clientsList} client = {client}/>

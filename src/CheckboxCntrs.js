@@ -23,7 +23,8 @@ class CheckboxCntr extends React.Component {
             apiResponce: (this.props.apiResponce),
             clientsList: (this.props.clientsList),
             sum: 0,
-            invNumber: ""
+            invNumber: "",
+            cl: 'cl3'
         };
         //var apiResponce=JSON.parse(this.props.apiResponce)
 
@@ -151,7 +152,7 @@ class CheckboxCntr extends React.Component {
         cntr_numbers={"cntrs": cntr_numbers}; 
         cntr_numbers = JSON.stringify (cntr_numbers);
         invContent=JSON.stringify(invContent);
-        let response = await fetch("http://localhost:8000/test?invContent="+invContent + "&ourCo="+ this.state.OurCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers+"&sum="+this.state.sum + "&invNumber="+this.state.invNumber);
+        let response = await fetch("http://localhost:8000/test?invContent="+invContent + "&ourCo="+ this.state.ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers+"&sum="+this.state.sum + "&invNumber="+this.state.invNumber);
         //  let response = await fetch("https://serene-beyond-29188.herokuapp.com/test?invContent="+invContent + "&ourCo="+ ourCo +"&client="+this.state.client+ "&apiResponce="+apiResponce+"&cntr_numbers="+cntr_numbers);
           let text= await response.json();
       }
@@ -168,27 +169,17 @@ class CheckboxCntr extends React.Component {
         delete (curr[id]);
         this.setState ({invContent: curr}); 
       }
-      /*
 
-      async getClientsList () {
-        let response = await fetch("http://localhost:2000/clientList");
-          let text= await response.json();
-          this.setState({clientsList: text})
-          //console.log(text);
-      return text
-      }
-      */
      
 
 render () {
-  //let client0=this.props.clientsList.toString();
-  //console.log("this.props.clientsList " + client0);
+
   let invoicebutton;
       if (this.state.invContent!=undefined && this.state.invContent.length>0) {
         if (this.state.invNumber==""){
         invoicebutton = <Button variant="success" onClick={this.InvoiceSubmit} > Issue Invoice</Button>}
         else {
-          invoicebutton = <Button variant="warning" onClick={this.InvoiceSubmit} > Amend Invoice</Button>}
+        invoicebutton = <Button variant="warning" onClick={this.InvoiceSubmit} > Amend Invoice  {this.state.invNumber}</Button>}
         
       }
 
@@ -207,6 +198,9 @@ render () {
 
 //select value="Sealogoc OY" as="select"
 var ourCo = this.state.ourCo;
+var client = this.state.client.split(",");
+client = client[2]; 
+console.log(client);
 
     return (
         <div>
@@ -228,7 +222,7 @@ var ourCo = this.state.ourCo;
 
 <Form.Group controlId="exampleForm.SelectCustom">
             <Form.Label>Client </Form.Label>
-              <Form.Control as="select" custom onChange={this.handleChangeClient}>
+              <Form.Control as="select" select value ={this.state.client} onChange={this.handleChangeClient}>
                 {this.props.clientsList.map ((client, index)=>
                 <option value = {client._id+"," + client.name +"," + client.address} key={index}> {client.name} </option>
                 ) }
