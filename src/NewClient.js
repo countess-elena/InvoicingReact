@@ -24,7 +24,12 @@ function NewClient () {
 
 
        // let response = await fetch("https://serene-beyond-29188.herokuapp.com/newClient?myobj="+myobj);
-        let response = await fetch("https://localhost:8000/newClient?myobj="+myobj);
+        let response = await fetch("http://localhost:8000/newClient?myobj="+myobj, {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*'
+      }
+        });
         let text= await response.text();
         alert("Client " + name + " is created " + text);
 

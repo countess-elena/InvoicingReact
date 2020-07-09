@@ -25,7 +25,12 @@ class Invoices extends React.Component {
 
   async Invoices () {
     //let response = await fetch ("http://serene-beyond-29188.herokuapp.com/getInvoices");
-    let response = await fetch ("http://localhost:8000/getInvoices");
+    let response = await fetch ("http://localhost:8000/getInvoices", {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': '*'
+  }
+    });
     let text= await response.text();
     text=JSON.parse (text); 
     
@@ -61,10 +66,16 @@ async oneInvoice (invNumber){
 }
 
 async download () {
-  const res = await fetch ("http://localhost:8000/dowloadInvoices");
-  console.log(res)
-  const blob = await res.blob();
-  download (blob, "file.csv");
+  const res = await fetch ("http://localhost:8000/dowloadInvoices", {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*'
+}
+  });
+  //console.log(res.blob())
+ const blob = await res.blob();
+  //console.log(blob);
+  download (blob, "invoices_list.csv");
 
   //let file = await response.text();
   console.log ('done')
