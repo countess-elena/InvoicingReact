@@ -108,6 +108,7 @@ async download () {
       <th>Date</th>
       <th>Client</th>
       <th>SUM</th>
+      <th>Payment Date</th>
     </tr>
   </thead>
   <tbody>
@@ -117,7 +118,8 @@ async download () {
       <td><Button variant='link' value={invoice.invNumber} onClick={this.handleClick}>{invoice.invNumber}</Button></td>
       <td>{this.formatDate(invoice.date)}</td>
       <td>{invoice.client.name}</td>
-          <td>{invoice.sum}</td>
+      <td>{invoice.sum}</td>
+          <td>{invoice.paymentDate>0 ? this.formatDate(invoice.paymentDate):"not paid"}</td>
     </tr>
           )}
   </tbody>
