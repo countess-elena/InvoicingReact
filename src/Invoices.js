@@ -7,6 +7,9 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Papaparse from 'papaparse' 
 import download from 'downloadjs';
+import Calendar from 'react-calendar';
+import Accordion from 'react-bootstrap/Accordion'
+import Card from 'react-bootstrap/Card'
 
 
 class Invoices extends React.Component {
@@ -14,14 +17,20 @@ class Invoices extends React.Component {
         super (props);
         this.state = {
           resp: null,
-          invoiceInfo:""
+          invoiceInfo:"",
+          date: new Date()
         }
-
+        
         this.Invoices(); 
 
         this.download = this.download.bind(this);
         this.handleClick = this.handleClick.bind(this);
   }
+  onChange = date => {
+  this.setState({ date });
+  
+  }
+
 
   async Invoices () {
     //let response = await fetch ("http://serene-beyond-29188.herokuapp.com/getInvoices");
@@ -119,7 +128,23 @@ async download () {
       <td>{this.formatDate(invoice.date)}</td>
       <td>{invoice.client.name}</td>
       <td>{invoice.sum}</td>
-          <td>{invoice.paymentDate>0 ? this.formatDate(invoice.paymentDate):"not paid"}</td>
+          <td>{invoice.paymentDate>0 ? this.formatDate(invoice.paymentDate):
+          <Accordion>
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                Date of payment
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body><Calendar
+          onChange={this.onChange}
+          value={this.state.date}/></Card.Body>
+            </Accordion.Collapse>
+          </Card>
+          </Accordion>
+
+           } </td>
     </tr>
           )}
   </tbody>
