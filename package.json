@@ -13,7 +13,7 @@
     "ejs": "^3.1.2",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "lodash": "^4.17.15",
     "morgan": "^1.10.0",
     "pdfkit": "^0.11.0",
