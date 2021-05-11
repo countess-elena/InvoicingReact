@@ -14,7 +14,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "jspdf": "^1.5.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "pdfkit": "^0.11.0",
     "react": "^16.13.1",
